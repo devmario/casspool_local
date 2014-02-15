@@ -1,5 +1,6 @@
 package com.vanillabreeze;
 
+import java.util.*;
 import java.io.*;
 import java.net.*;
 
@@ -40,40 +41,44 @@ class CassCon implements Runnable {
 				//System.out.println(line);
 				
 				JSONObject jsonObj;
-				String uid = "";
+				String exe = "";
 				try {
 					jsonObj = new JSONObject(line);
-					uid = (String)jsonObj.get("uid");
+					exe = (String)jsonObj.get("exe");
 				} catch (JSONException e) {
 					System.out.println("json err: " + e);
 					e.printStackTrace();
 				}
 				//System.out.println(uid);
 				try {
+					String uid = exe;
 					ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(keyspace, "User", StringSerializer.get(), StringSerializer.get());
 					ColumnFamilyResult<String, String> res = template.queryColumns(uid);
-					if ( res != null ){
-						out.print("{\"id\":\"" + uid + "\",\"isguest\":false,\"nickname\":\"\uc7a5\uc6d0\ud76c\",\"picurl\":\"http://th-p6.talk.kakao.co.kr/th/talkp/wkdqfgOrT5/ThdwpFelRV8JzwKACNq8ck/txh8d4_110x110_c.jpg\",\"isopenpicurl\":false,\"coin\":500,\"gem\":5,\"lv\":1,\"exp\":0,\"nextexp\":200,\"stam\":5,\"maxstam\":20,\"avail\":\"\",\"tutorial\":false,\"message_blocked\":false,\"login_week\":\"2014-07\",\"review\":\"0.0\"}");
-					}else{
+					if (res.hasResults()) {
+						out.println("hasResults:" + res.hasResults());
+					} else {
 						Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("id", uid));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("nickname", "test"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("isguest", "false"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("picurl", "http://th-p6.talk.kakao.co.kr/th/talkp/wkdqfgOrT5/ThdwpFelRV8JzwKACNq8ck/txh8d4_110x110_c.jpg"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("isopenpicurl", "false"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("coin", "500"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("gem", "5"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("lv", "1"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("exp", "0"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("nextexp", "200"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("stam", "5"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("maxstam", "20"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("tutorial", "false"));
-						mutator.addInsertion(uid, "User", HFactory.createStringColumn("message_blocked", "false"));
-		    				mutator.execute();
 
-						out.print("{\"id\":\"" + uid + "\",\"isguest\":false,\"nickname\":\"\uc7a5\uc6d0\ud76c\",\"picurl\":\"http://th-p6.talk.kakao.co.kr/th/talkp/wkdqfgOrT5/ThdwpFelRV8JzwKACNq8ck/txh8d4_110x110_c.jpg\",\"isopenpicurl\":false,\"coin\":500,\"gem\":5,\"lv\":1,\"exp\":0,\"nextexp\":200,\"stam\":5,\"maxstam\":20,\"avail\":\"\",\"tutorial\":false,\"message_blocked\":false,\"login_week\":\"2014-07\",\"review\":\"0.0\"}");
+						Set<HColumn<String, String>> colums = new HashSet<HColumn<String,String>>();
 						
+						JSONObject tmp;
+						try {
+							tmp = new JSONObject("{\"id\":\"" + uid + "\",\"isguest\":\"false\",\"nickname\":\"\uc7a5\uc6d0\ud76c\",\"picurl\":\"http://th-p6.talk.kakao.co.kr/th/talkp/wkdqfgOrT5/ThdwpFelRV8JzwKACNq8ck/txh8d4_110x110_c.jpg\",\"isopenpicurl\":\"false\",\"coin\":\"500\",\"gem\":\"5\",\"lv\":\"1\",\"exp\":\"0\",\"nextexp\":\"200\",\"stam\":\"5\",\"maxstam\":\"20\",\"avail\":\"\",\"tutorial\":\"false\",\"message_blocked\":\"false\",\"login_week\":\"2014-07\",\"review\":\"0.0\"}");
+							Iterator iter = tmp.keys();
+							while(iter.hasNext()) {
+								String key = (String)iter.next();
+								colums.add(HFactory.createStringColumn(key, (String)tmp.get(key)));
+							}					
+						} catch (JSONException e) {
+							System.out.println("json err: " + e);
+							e.printStackTrace();
+						}
+
+						for (HColumn<String, String> column : colums) {
+							 mutator.addInsertion(uid, "User", column);
+						}
+		    				mutator.execute();
+						out.println("insert success");	
 					}
 				} catch (HectorException e) {
 				   e.printStackTrace();
