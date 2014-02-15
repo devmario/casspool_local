@@ -55,7 +55,11 @@ class CassCon implements Runnable {
 					ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(keyspace, "User", StringSerializer.get(), StringSerializer.get());
 					ColumnFamilyResult<String, String> res = template.queryColumns(uid);
 					if (res.hasResults()) {
-						out.println("hasResults:" + res.hasResults());
+						String tmp = "";
+						for (String name : res.getColumnNames()) {
+							out.println(name + ":" + res.getString(name));
+						}	
+						out.println("get complete");
 					} else {
 						Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
 
