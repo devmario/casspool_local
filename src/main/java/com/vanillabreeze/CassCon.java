@@ -36,7 +36,7 @@ class CassCon implements Runnable {
 			DataInputStream in = new DataInputStream (server.getInputStream());
 			PrintStream out = new PrintStream(server.getOutputStream());
 
-			while((line = in.readLine()) != null && !line.equals(".")) {
+			while((line = in.readLine()) != null && !line.equals("quit")) {
 				//System.out.println(line);
 				
 				JSONObject jsonObj;

@@ -3,6 +3,7 @@ package com.vanillabreeze;
 import java.io.*;
 import java.net.*;
 
+import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
 import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
@@ -25,7 +26,7 @@ public class App {
 	public static void main(String[] args) {
 		int i = 0;
 		try {
-			Cluster cluster = HFactory.getOrCreateCluster("DessertTown", "localhost:9160");
+			Cluster cluster = HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0]));
 			Keyspace keyspace = HFactory.createKeyspace("DessertTown", cluster);
 
 			ServerSocket listener = new ServerSocket(port);
