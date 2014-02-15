@@ -1,0 +1,2 @@
+2014-02-15 19:16:36,904 INFO  [CassandraHostRetryService] - Downed Host Retry service started with queue size -1 and retry delay 10s
+2014-02-15 19:16:36,999 INFO  [JmxMonitor] - Registering JMX me.prettyprint.cassandra.service_DessertTown:ServiceType=hector,MonitorType=hector
