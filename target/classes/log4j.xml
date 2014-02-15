@@ -10,18 +10,16 @@
         </layout>
     </appender>
 
-    <appender name="default.file" class="org.apache.log4j.FileAppender">
-        <param name="file" value="/log/mylogfile.log" />
-        <param name="append" value="false" />
+    <appender name="default.file" class="org.apache.log4j.ConsoleAppender">
+        <param name="target" value="System.out" />
         <param name="threshold" value="debug" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
         </layout>
     </appender>
 
-    <appender name="another.file" class="org.apache.log4j.FileAppender">
-        <param name="file" value="/log/anotherlogfile.log" />
-        <param name="append" value="false" />
+    <appender name="another.file" class="org.apache.log4j.ConsoleAppender">
+        <param name="target" value="System.out" />
         <param name="threshold" value="debug" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />

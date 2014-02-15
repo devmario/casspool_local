@@ -13,7 +13,7 @@ if [ -n "$PID" ]; then
 	echo "[casspool_tool kill casspool process]"
 fi
 
-./run_jar.sh
+./run_jar.sh 127.0.0.1
 
 if [ $? != 0 ]; then
 	exit 1
