@@ -40,4 +40,9 @@ telnet localhost 6666
 {"exe":"get_multi","query":{"where":"SA_Tool","keys":["1392008425.admin", "1388136414.admin"], "rows":["Base_010_Vanilla"], "is_counter":true}}
 #output:{"1388136414.admin":{"Base_010_Vanilla":18},"1392008425.admin":{"Base_010_Vanilla":1}}
 
+#get super column counter
+{"exe":"get_multi","query":{"where":"WeeklyDessertCounter","keys":["1388725994.88327908239392065"], "rows":["2014-01"], "is_counter":true, "is_super":true}}
+#output: {"1388725994.88327908239392065":{"2014-01":{"total":3,"fun":1,"beauty":2}}}
+
+
 ```
