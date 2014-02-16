@@ -23,6 +23,7 @@ import org.json.JSONException;
 
 import com.vanillabreeze.CassGetMulti;
 import com.vanillabreeze.CassInsertMulti;
+import com.vanillabreeze.CassGet;
 
 class CassCon implements Runnable {
 	private Socket server = null;
@@ -49,6 +50,9 @@ class CassCon implements Runnable {
 						output = query.execute();
 					} else if(exe.equals("insert_multi")) {
 						CassInsertMulti query = new CassInsertMulti(this.keyspace, input.getJSONObject("query"));
+						output = query.execute();
+					} else if(exe.equals("get")) {
+						CassGet query = new CassGet(this.keyspace, input.getJSONObject("query"));
 						output = query.execute();
 					}
 					if(output != null)
