@@ -44,5 +44,8 @@ telnet localhost 6666
 {"exe":"get_multi","query":{"where":"WeeklyDessertCounter","keys":["1388725994.88327908239392065"], "rows":["2014-01"], "is_counter":true, "is_super":true}}
 #output: {"1388725994.88327908239392065":{"2014-01":{"total":3,"fun":1,"beauty":2}}}
 
+#counter modify
+{"exe":"insert_multi","query":{"where":"SA_Tool", "data":{"1392008425.admin":{"010_Face_Defeyeall":2}}, "is_counter":true}}
+#output:{}
 
 ```
