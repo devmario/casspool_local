@@ -41,7 +41,23 @@ class CassGetMulti {
 			output = new JSONObject();
 			String where = (String)this.input.get("where");
 			JSONArray keys = (JSONArray)this.input.get("keys");
-
+			JSONArray json_rows = null;
+			String start = "";
+			String finish = "";
+			boolean reversed = false;
+			int count = 1000;
+			if(this.input.has("rows")) {
+				json_rows = (JSONArray)this.input.get("rows");
+			} else {
+				if(this.input.has("start"))
+					start = (String)this.input.get("start");
+				if(this.input.has("finish"))
+					finish = (String)this.input.get("finish");
+				if(this.input.has("reversed"))
+					reversed = (boolean)this.input.getBoolean("reversed");
+				if(this.input.has("count"))
+					count = (int)this.input.getInt("count");
+			}
 			try {
 				MultigetSliceQuery<String, String, String> multigetSliceQuery = HFactory.createMultigetSliceQuery(this.keyspace, StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
 			
@@ -50,7 +66,16 @@ class CassGetMulti {
 					list_key.add((String)keys.get(n));
 				multigetSliceQuery.setColumnFamily(where);
 				multigetSliceQuery.setKeys(list_key);
-				multigetSliceQuery.setRange("", "", false, 1000);
+
+				if(json_rows == null) {
+					multigetSliceQuery.setRange(start, finish, reversed, count);
+				} else {
+					String list_row[] = new String[json_rows.length()];
+					for(int n = 0; n < json_rows.length(); n++)
+						list_row[n] = (String)json_rows.get(n);
+					multigetSliceQuery.setColumnNames(list_row);
+				}
+
 				QueryResult<Rows<String, String, String>> result = multigetSliceQuery.execute();
 
 				Rows<String, String, String> rows = result.get();
