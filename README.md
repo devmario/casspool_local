@@ -48,4 +48,8 @@ telnet localhost 6666
 {"exe":"insert_multi","query":{"where":"SA_Tool", "data":{"1392008425.admin":{"010_Face_Defeyeall":2}}, "is_counter":true}}
 #output:{}
 
+#super counter modify
+{"exe":"insert_multi","query":{"where":"WeeklyDessertCounter", "data":{"1388725994.88327908239392065":{"2014-01":{"fun":2}}}, "is_counter":true, "is_super":true}}
+#output:{}
+
 ```
