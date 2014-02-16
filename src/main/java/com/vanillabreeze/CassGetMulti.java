@@ -17,7 +17,12 @@ import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
+import me.prettyprint.hector.api.query.MultigetSliceQuery;
+import me.prettyprint.hector.api.beans.Rows;
+import me.prettyprint.hector.api.beans.Row;
+import me.prettyprint.hector.api.beans.ColumnSlice;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -35,17 +40,29 @@ class CassGetMulti {
 		try {
 			output = new JSONObject();
 			String where = (String)this.input.get("where");
-			String key = (String)this.input.get("key");
+			JSONArray keys = (JSONArray)this.input.get("keys");
 
 			try {
-				ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(this.keyspace, where, StringSerializer.get(), StringSerializer.get());
-				ColumnFamilyResult<String, String> result = template.queryColumns(key);
+				MultigetSliceQuery<String, String, String> multigetSliceQuery = HFactory.createMultigetSliceQuery(this.keyspace, StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
+			
+				ArrayList list_key = new ArrayList<String>();
+				for(int n = 0; n < keys.length(); n++)
+					list_key.add((String)keys.get(n));
+				multigetSliceQuery.setColumnFamily(where);
+				multigetSliceQuery.setKeys(list_key);
+				multigetSliceQuery.setRange("", "", false, 1000);
+				QueryResult<Rows<String, String, String>> result = multigetSliceQuery.execute();
 
-				if(result.hasResults()) {
-					for(String name : result.getColumnNames()) {
-						output.put(name, result.getString(name));
+				Rows<String, String, String> rows = result.get();
+				for(Row<String, String, String> row : rows) {
+					JSONObject row_json = new JSONObject();
+					ColumnSlice<String, String> columns = row.getColumnSlice();
+					for(HColumn<String, String> column : columns.getColumns()) {
+						row_json.put(column.getName(), column.getValue());
 					}
+					output.put(row.getKey(), row_json);
 				}
+				
 			} catch(HectorException e) {
 				e.printStackTrace();
 			}

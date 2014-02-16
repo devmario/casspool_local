@@ -23,11 +23,12 @@ import org.json.JSONException;
 
 import com.vanillabreeze.CassGet;
 import com.vanillabreeze.CassInsert;
+import com.vanillabreeze.CassGetMulti;
 
 class CassCon implements Runnable {
-	private Socket server;
-	private String line;
-	private Keyspace keyspace;
+	private Socket server = null;
+	private String line = "";
+	private Keyspace keyspace = null;
 
 	CassCon(Socket server, Keyspace keyspace) {
 		this.server = server;
@@ -36,27 +37,31 @@ class CassCon implements Runnable {
 
 	public void run () {
 		try {
-			DataInputStream in = new DataInputStream(server.getInputStream());
-			PrintStream out = new PrintStream(server.getOutputStream());
+			DataInputStream in = new DataInputStream(this.server.getInputStream());
+			PrintStream out = new PrintStream(this.server.getOutputStream());
 
 			while((line = in.readLine()) != null && !line.equals("quit")) {
 				try {
 					JSONObject input = new JSONObject(line);
 					String exe = (String)input.get("exe");
+					JSONObject output = null;
 					if(exe.equals("get")) {
 						CassGet query = new CassGet(this.keyspace, input.getJSONObject("query"));
-						JSONObject output = query.execute();
-						out.println(output.toString());
+						output = query.execute();
 					} else if(exe.equals("insert")) {
 						CassInsert query = new CassInsert(this.keyspace, input.getJSONObject("query"));
-						JSONObject output = query.execute();
-						out.println(output.toString());
+						output = query.execute();
+					} else if(exe.equals("get_multi")) {
+						CassGetMulti query = new CassGetMulti(this.keyspace, input.getJSONObject("query"));
+						output = query.execute();
 					}
+					if(output != null)
+						out.println(output.toString());
 				} catch(JSONException e) {
 					e.printStackTrace();
 				}
 			}
-			server.close();
+			this.server.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
