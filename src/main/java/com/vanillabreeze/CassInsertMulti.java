@@ -34,7 +34,8 @@ class CassInsertMulti {
 			boolean is_counter = false;
 			if(this.input.has("is_counter"))
 				is_counter = this.input.getBoolean("is_counter");
-
+			if(this.input.has("is_super"))
+				is_super = this.input.getBoolean("is_super");
 			try {
 				Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
 				Iterator it_data = data.keys();
@@ -66,7 +67,25 @@ class CassInsertMulti {
 							mutator.addCounter(k_data, where, val);
 						}
 					} else if(is_super == true && is_counter == true) {
-
+						Set<HCounterSuperColumn<String, String>> set = new HashSet<HCounterSuperColumn<String, String>>();
+						String k_data = (String)it_data.next();
+						JSONObject v_data = (JSONObject)data.get(k_data);
+						Iterator it_inner = v_data.keys();
+						while(it_inner.hasNext()) {
+							String k_inner = (String)it_inner.next();
+							JSONObject v_inner = (JSONObject)v_data.get(k_inner);
+							Iterator it_super = v_inner.keys();
+							List<HCounterColumn<String>> list_super = new ArrayList<HCounterColumn<String>>();
+							while(it_super.hasNext()) {
+								String k_super = (String)it_super.next();
+								long v_super = v_inner.getLong(k_super);
+								list_super.add(HFactory.createCounterColumn(k_super, v_super));
+							}
+							set.add(HFactory.createCounterSuperColumn(k_inner, list_super, StringSerializer.get(), StringSerializer.get()));
+						}
+						for(HCounterSuperColumn<String, String> val : set) {
+							mutator.addCounter(k_data, where, val);
+						}
 					}
 
 				} 	
