@@ -43,4 +43,9 @@ telnet localhost 6666
 #insert multi
 {"exe":"insert_multi","query":{"where":"User", "data":{"insert_user_1_id":{"nickname":"guest1"}, "insert_user_2_id":{"nickname":"guest2"}}}}
 #output: {}
+
+#counter get
+{"exe":"get_multi","query":{"where":"SA_Tool","keys":["1392008425.admin", "1388136414.admin"], "rows":["Base_010_Vanilla"], "is_counter":true}}
+{"1388136414.admin":{"Base_010_Vanilla":18},"1392008425.admin":{"Base_010_Vanilla":1}}
+
 ```
