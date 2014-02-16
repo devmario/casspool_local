@@ -34,7 +34,7 @@ class CassCon implements Runnable {
 	public void run () {
 		try {
 			//System.out.println("hi");
-			DataInputStream in = new DataInputStream (server.getInputStream());
+			DataInputStream in = new DataInputStream(server.getInputStream());
 			PrintStream out = new PrintStream(server.getOutputStream());
 
 			while((line = in.readLine()) != null && !line.equals("quit")) {
