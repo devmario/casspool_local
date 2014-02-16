@@ -91,7 +91,8 @@ class CassGetMulti {
 						for(HColumn<String, String> column : columns.getColumns()) {
 							row_json.put(column.getName(), column.getValue());
 						}
-						output.put(row.getKey(), row_json);
+						if(row_json.length() > 0)
+							output.put(row.getKey(), row_json);
 					}
 				} else if(is_counter == true && is_super == false) {
 					MultigetSliceCounterQuery<String, String> query = HFactory.createMultigetSliceCounterQuery(this.keyspace, StringSerializer.get(), StringSerializer.get());
@@ -108,7 +109,8 @@ class CassGetMulti {
 						for(HCounterColumn<String> counter : counters.getColumns()) {
 							row_json.put(counter.getName(), counter.getValue());
 						}
-						output.put(row.getKey(), row_json);
+						if(row_json.length() > 0)
+							output.put(row.getKey(), row_json);
 					}
 				} else if(is_counter == true && is_super == true) {
 					MultigetSuperSliceCounterQuery<String, String, String> query = HFactory.createMultigetSuperSliceCounterQuery(this.keyspace, StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
@@ -130,9 +132,11 @@ class CassGetMulti {
 							for(HCounterColumn<String> value_super : list_super) {
 								super_row_json.put(value_super.getName(), value_super.getValue());
 							}
-							row_json.put(inner_column.getName(), super_row_json);
+							if(list_super.size() > 0)
+								row_json.put(inner_column.getName(), super_row_json);
 						}
-						output.put(row.getKey(), row_json);
+						if(row_json.length() > 0)
+							output.put(row.getKey(), row_json);
 					}
 				}
 				
