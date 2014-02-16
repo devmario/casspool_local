@@ -18,5 +18,5 @@ telnet localhost 6666
 
 #insert
 {"exe":"insert","query":{"where":"column family name","column key":"id","data":{"data_id_0":"data_value_0","data_value_1":"data_value_1"}}}
-#output: inserted data json
+#output: {}
 ```

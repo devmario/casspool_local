@@ -21,11 +21,11 @@ import me.prettyprint.hector.api.query.QueryResult;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-class CassInsert {
+class CassGetMulti {
 	private Keyspace keyspace;
 	private JSONObject input;
 
-	CassInsert(Keyspace keyspace, JSONObject input) {
+	CassGetMulti(Keyspace keyspace, JSONObject input) {
 		this.keyspace = keyspace;
 		this.input = input;
 	}
@@ -38,20 +38,14 @@ class CassInsert {
 			String key = (String)this.input.get("key");
 
 			try {
-				Mutator<String> mutator = HFactory.createMutator(keyspace, StringSerializer.get());
-				Set<HColumn<String, String>> colums = new HashSet<HColumn<String,String>>();
-				
-				JSONObject data = (JSONObject)this.input.get("data");
-				Iterator iter = data.keys();
-				while(iter.hasNext()) {
-					String row_key = (String)iter.next();
-					colums.add(HFactory.createStringColumn(row_key, (String)data.get(row_key)));
+				ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(this.keyspace, where, StringSerializer.get(), StringSerializer.get());
+				ColumnFamilyResult<String, String> result = template.queryColumns(key);
+
+				if(result.hasResults()) {
+					for(String name : result.getColumnNames()) {
+						output.put(name, result.getString(name));
+					}
 				}
-				
-				for(HColumn<String, String> column : colums) {
-					mutator.addInsertion(key, where, column);
-				}
-				mutator.execute();
 			} catch(HectorException e) {
 				e.printStackTrace();
 			}
