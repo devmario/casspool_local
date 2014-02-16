@@ -19,6 +19,8 @@ access
 
 `
 telnet localhost 6666
+
 //User 88695329749732113 get
+
 {"exe":"get","query":{"where":"User","key":"88695329749732113"}}
 `
