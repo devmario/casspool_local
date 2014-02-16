@@ -15,6 +15,7 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.*;
 import me.prettyprint.hector.api.beans.*;
+import me.prettyprint.hector.api.beans.CounterSuperSlice;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -110,7 +111,29 @@ class CassGetMulti {
 						output.put(row.getKey(), row_json);
 					}
 				} else if(is_counter == true && is_super == true) {
-
+					MultigetSuperSliceCounterQuery<String, String, String> query = HFactory.createMultigetSuperSliceCounterQuery(this.keyspace, StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
+					query.setColumnFamily(where).setKeys(list_key);
+					if(json_rows == null)
+						query.setRange(start, finish, reversed, count);
+					else
+						query.setColumnNames(list_row);
+					QueryResult<CounterSuperRows<String, String, String>> result = query.execute();
+					CounterSuperRows<String, String, String> rows = result.get();
+					for(CounterSuperRow<String, String, String> row : rows) {
+						JSONObject row_json = new JSONObject();
+						CounterSuperSlice<String, String> columns = row.getSuperSlice();
+						List<HCounterSuperColumn<String, String>> inner_columns = columns.getSuperColumns();
+						
+						for(HCounterSuperColumn<String, String> inner_column : inner_columns) {
+							JSONObject super_row_json = new JSONObject();
+							List<HCounterColumn<String>> list_super = inner_column.getColumns();
+							for(HCounterColumn<String> value_super : list_super) {
+								super_row_json.put(value_super.getName(), value_super.getValue());
+							}
+							row_json.put(inner_column.getName(), super_row_json);
+						}
+						output.put(row.getKey(), row_json);
+					}
 				}
 				
 			} catch(HectorException e) {
