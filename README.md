@@ -19,4 +19,8 @@ telnet localhost 6666
 #insert
 {"exe":"insert","query":{"where":"column family name","column key":"id","data":{"data_id_0":"data_value_0","data_value_1":"data_value_1"}}}
 #output: {}
+
+#get multi
+{"exe":"get_multi","query":{"where":"User","keys":["88695329749732113", "88335334833984240"]}}
+#output: {"88695329749732113":{data}, "88335334833984240": {data}}
 ```
