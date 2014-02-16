@@ -38,6 +38,6 @@ telnet localhost 6666
 
 #counter get
 {"exe":"get_multi","query":{"where":"SA_Tool","keys":["1392008425.admin", "1388136414.admin"], "rows":["Base_010_Vanilla"], "is_counter":true}}
-{"1388136414.admin":{"Base_010_Vanilla":18},"1392008425.admin":{"Base_010_Vanilla":1}}
+#output:{"1388136414.admin":{"Base_010_Vanilla":18},"1392008425.admin":{"Base_010_Vanilla":1}}
 
 ```
