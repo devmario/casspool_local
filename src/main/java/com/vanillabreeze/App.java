@@ -26,8 +26,10 @@ public class App {
 	public static void main(String[] args) {
 		try {
 			ArrayList<Cluster> list_cluster = new ArrayList<Cluster>();
-			list_cluster.add(HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0])));
-			list_cluster.add(HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0])));
+			CassandraHostConfigurator conf = new CassandraHostConfigurator(args[0]);
+			conf.setMaxActive(100);
+			list_cluster.add(HFactory.getOrCreateCluster("DessertTown", conf));
+			list_cluster.add(HFactory.getOrCreateCluster("DessertTown", conf));
 	
 			ArrayList<Keyspace> list_keyspace = new ArrayList<Keyspace>();
 			list_keyspace.add(HFactory.createKeyspace("DessertTown", list_cluster.get(0)));
