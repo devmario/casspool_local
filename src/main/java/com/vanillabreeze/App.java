@@ -20,23 +20,35 @@ import me.prettyprint.hector.api.query.QueryResult;
 
 import com.vanillabreeze.CassCon;
 
+import java.util.*;
+
 public class App {
 	public static void main(String[] args) {
 		try {
-			Cluster cluster = HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0]));
-			Keyspace keyspace = HFactory.createKeyspace("DessertTown", cluster);
+			ArrayList<Cluster> list_cluster = new ArrayList<Cluster>();
+			list_cluster.add(HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0])));
+			list_cluster.add(HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0])));
+	
+			ArrayList<Keyspace> list_keyspace = new ArrayList<Keyspace>();
+			list_keyspace.add(HFactory.createKeyspace("DessertTown", list_cluster.get(0)));
+			list_keyspace.add(HFactory.createKeyspace("DessertTown", list_cluster.get(1)));
 
+			int i = 0;
 			ServerSocket listener = new ServerSocket(6666);
 			Socket server;
 			boolean loop = true;
 			while(loop) {
 				server = listener.accept();
-				CassCon conn_c = new CassCon(server, keyspace);
+				CassCon conn_c = new CassCon(server, list_keyspace.get(i));
 				Thread t = new Thread(conn_c);
 				t.start();
+				i++;
+				if(i >= list_keyspace.size())
+					i = 0;
 			}
 
-			cluster.getConnectionManager().shutdown();
+			for(int n = 0; n < list_cluster.size(); n++)
+				list_cluster.get(n).getConnectionManager().shutdown();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
