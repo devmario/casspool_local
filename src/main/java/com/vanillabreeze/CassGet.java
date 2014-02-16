@@ -38,9 +38,7 @@ class CassGet {
 			String key = (String)this.input.get("key");
 
 			try {
-				StringSerializer serializer = StringSerializer.get();
-
-				ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(this.keyspace, where, serializer, serializer);
+				ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(this.keyspace, where, StringSerializer.get(), StringSerializer.get());
 				ColumnFamilyResult<String, String> result = template.queryColumns(key);
 
 				if(result.hasResults()) {

@@ -21,17 +21,15 @@ import me.prettyprint.hector.api.query.QueryResult;
 import com.vanillabreeze.CassCon;
 
 public class App {
-	private static int port=6666, maxConnections=0;
-
 	public static void main(String[] args) {
-		int i = 0;
 		try {
 			Cluster cluster = HFactory.getOrCreateCluster("DessertTown", new CassandraHostConfigurator(args[0]));
 			Keyspace keyspace = HFactory.createKeyspace("DessertTown", cluster);
 
-			ServerSocket listener = new ServerSocket(port);
+			ServerSocket listener = new ServerSocket(6666);
 			Socket server;
-			while((i++ < maxConnections) || (maxConnections == 0)) {
+			boolean loop = true;
+			while(loop) {
 				server = listener.accept();
 				CassCon conn_c = new CassCon(server, keyspace);
 				Thread t = new Thread(conn_c);
@@ -39,8 +37,8 @@ public class App {
 			}
 
 			cluster.getConnectionManager().shutdown();
-		} catch(IOException ioe) {
-			System.out.println("IOException on socket listen: " + ioe);
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

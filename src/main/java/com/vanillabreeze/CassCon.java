@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import com.vanillabreeze.CassGet;
+import com.vanillabreeze.CassInsert;
 
 class CassCon implements Runnable {
 	private Socket server;
@@ -44,6 +45,10 @@ class CassCon implements Runnable {
 					String exe = (String)input.get("exe");
 					if(exe.equals("get")) {
 						CassGet query = new CassGet(this.keyspace, input.getJSONObject("query"));
+						JSONObject output = query.execute();
+						out.println(output.toString());
+					} else if(exe.equals("insert")) {
+						CassInsert query = new CassInsert(this.keyspace, input.getJSONObject("query"));
 						JSONObject output = query.execute();
 						out.println(output.toString());
 					}
