@@ -39,4 +39,8 @@ telnet localhost 6666
 #get multi with row index and count and reverse
 {"exe":"get_multi","query":{"where":"User","keys":["88695329749732113", "88335334833984240"], "start":"g", "reversed": true, "count":2}}
 #output:{"88335334833984240":{"exp":"1500","coin":"8354"},"88695329749732113":{"exp":"0","coin":"500"}}
+
+#insert multi
+{"exe":"insert_multi","query":{"where":"User", "data":{"insert_user_1_id":{"nickname":"guest1"}, "insert_user_2_id":{"nickname":"guest2"}}}}
+#output: {}
 ```
