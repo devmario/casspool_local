@@ -61,7 +61,7 @@ class CassGetMulti {
 				is_counter = this.input.getBoolean("is_counter");
 
 			try {
-				ArrayList list_key = new ArrayList<String>();
+				ArrayList<String> list_key = new ArrayList<String>();
 				for(int n = 0; n < keys.length(); n++)
 					list_key.add((String)keys.get(n));
 				String list_row[] = null;
