@@ -10,11 +10,11 @@ import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
 import me.prettyprint.cassandra.service.template.ThriftColumnFamilyTemplate;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
-import me.prettyprint.hector.api.beans.HColumn;
+import me.prettyprint.hector.api.beans.*;
 import me.prettyprint.hector.api.exceptions.HectorException;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
-import me.prettyprint.hector.api.query.ColumnQuery;
+import me.prettyprint.hector.api.query.*;
 import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
 
@@ -41,7 +41,7 @@ class CassGet {
 
 			try {
 				ColumnFamilyTemplate<String, String> template = new ThriftColumnFamilyTemplate<String, String>(this.keyspace, where, StringSerializer.get(), StringSerializer.get());
-				ColumnFamilyResult<String, String> result;
+				ColumnFamilyResult<String, String> result = null;
 				if(rows == null)
 					result = template.queryColumns(key);
 				else {

@@ -57,8 +57,13 @@ class CassCon implements Runnable {
 					}
 					if(output != null)
 						out.println(output.toString());
+					else
+						out.println("{}}");
+					out.print('\u0000');
 				} catch(JSONException e) {
 					e.printStackTrace();
+					out.println("{}}");
+					out.print('\u0000');
 				}
 			}
 			this.server.close();
