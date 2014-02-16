@@ -1,13 +1,15 @@
 #!/bin/bash
 
-mvn compile
+echo "[casspool_tool compile...]"
+mvn compile -DskipTests -q
 if [ $? != 0 ]; then
 	echo "[casspool_tool fail compile maven]"
 	exit 1
 fi
 echo "[casspool_tool success compile maven]"
 
-mvn package
+echo "[casspool_tool package...]"
+mvn package -DskipTests -q
 if [ $? != 0 ]; then
 	echo "[casspool_tool fail package maven]"
 	exit 2

@@ -63,12 +63,9 @@ class CassGetMulti {
 				ArrayList list_key = new ArrayList<String>();
 				for(int n = 0; n < keys.length(); n++)
 					list_key.add((String)keys.get(n));
-				String list_row[] = null;
-				if(json_rows != null && json_rows.length() > 0) {
-					list_row = new String[json_rows.length()];
-					for(int n = 0; n < json_rows.length(); n++)
-						list_row[n] = (String)json_rows.get(n);
-				}
+				String list_row[] = new String[json_rows.length()];
+				for(int n = 0; n < json_rows.length(); n++)
+					list_row[n] = (String)json_rows.get(n);
 						
 				if(is_counter == false && is_super == false) {
 					MultigetSliceQuery<String, String, String> multigetSliceQuery = HFactory.createMultigetSliceQuery(this.keyspace, StringSerializer.get(), StringSerializer.get(), StringSerializer.get());
