@@ -60,4 +60,12 @@ telnet localhost 6666
 {"exe":"insert_multi","query":{"where":"WeeklyDessertCounter", "data":{"1388725994.88327908239392065":{"2014-01":{"fun":2}}}, "is_counter":true, "is_super":true}}
 #output:{}
 
+#remove key with rows all type cf
+{"exe":"remove_multi","query":{"where":"SA_Tool","keys":["1388136414.admin"], "rows":["1388136388.admin","Base_010_Vanilla"]}}
+#output:{}
+
+#remove keys all type cf
+{"exe":"remove_multi","query":{"where":"SA_Tool","keys":["1388136414.admin", "1388136346.admin"]}}
+#output:{}
+
 ```
