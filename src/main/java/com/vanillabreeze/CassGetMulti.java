@@ -141,6 +141,7 @@ class CassGetMulti {
 				}
 				
 			} catch(HectorException e) {
+				System.out.println(this.input.toString());
 				e.printStackTrace();
 			}
 		} catch(JSONException e) {

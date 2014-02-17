@@ -58,6 +58,7 @@ class CassRemoveMulti {
 				}
 				mutator.execute();
 			} catch(HectorException e) {
+				System.out.println(this.input.toString());
 				e.printStackTrace();
 			}
 		} catch(JSONException e) {
